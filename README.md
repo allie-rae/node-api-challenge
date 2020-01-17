@@ -38,15 +38,31 @@ Commit your code regularly and use descriptive messages. This helps both you (in
 
 Demonstrate your understanding of this Sprint's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your Team Lead.
 
-- [ ] Mention two parts of Express that you learned about this week.
+- [x] Mention two parts of Express that you learned about this week.
 
-- [ ] Describe Middleware?
+    1. Express is a JavaScript framework. It is to the backend like React is to the frontend. 
+    2. It adds support for things like routing and middleware.
 
-- [ ] Describe a Resource?
+- [x] Describe Middleware?
 
-- [ ] What can the API return to help clients know if a request was successful?
+    Middleware are small functions that perform a necessary task and extend the features provided by express. Things like logging and authentication are often handled by middleware. Middleware can be global or local. 
 
-- [ ] How can we partition our application into sub-applications?
+- [x] Describe a Resource?
+
+    This is referring to designing a RESTful API. A resource is: 
+    - Accessible via a unique URI
+    - potentially represented in multiple ways
+    - managed via HTTP methods
+    
+    And a resource's communication happens over a stateless protocol (HTTP)
+
+- [x] What can the API return to help clients know if a request was successful?
+
+    An api can return a status like 200 or 201 that communicates the request was successful. It can also return a success message or return an object with a user ID for example, which can be used by the frontend.
+
+- [x] How can we partition our application into sub-applications?
+
+    Express Router is a way to partition an app into sub-applications. It's a great way to keep things clean and organized based on URIs.
 
 ## Minimum Viable Product
 
