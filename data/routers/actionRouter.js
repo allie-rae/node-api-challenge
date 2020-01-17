@@ -8,7 +8,6 @@ router.get('/', (req, res) => {
         res.status(200).json(actions)
     })
     .catch(err => {
-        console.log(err);
         res.status(500).json({ errorMessage: "Error retrieving actions data from database." });
     });
 });
@@ -20,7 +19,6 @@ router.get('/:id', validateId, (req, res) => {
         res.status(200).json(action)
     })
     .catch(err => {
-        console.log(err);
         res.status(500).json({ errorMessage: "Error retrieving action data from database." })
     });
 });
@@ -33,7 +31,6 @@ router.post('/', validateAction, (req, res) => {
         res.status(201).json(action);
     })
     .catch(err => {
-        console.log(err);
         err.errno === 19
         ? res.status(500).json({ errorMessage: "Invalid project ID."})
         : res.status(500).json({ errorMessage: "Error posting action to database."});
@@ -49,7 +46,6 @@ router.delete('/:id', validateId, (req, res) => {
         : res.status(200).json({ message: "Action deleted." });
     })
     .catch(err => {
-        console.log(err);
         res.status(500).json({ errorMessage: "Error removing action from database." });
     });
 });
@@ -57,14 +53,12 @@ router.delete('/:id', validateId, (req, res) => {
 router.put('/:id', validateId, (req, res) => {
     let id = req.params.id;
     let changes = req.body;
-    console.log(changes)
 
     ActionsDb.update(id, changes)
     .then(changedAction => {
         res.status(200).json(changedAction);
     })
     .catch(err => {
-        console.log(err);
         res.status(500).json({ errorMessage: "Error editing action in database." });
     });
 });
@@ -80,7 +74,6 @@ ActionsDb.get(id)
     : next();
 })
 .catch(err => {
-    console.log(err);
     res.status(500).json({ errorMessage: "Error checking ID in database." })
 })
 }
