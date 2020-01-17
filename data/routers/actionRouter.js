@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateId, (req, res) => {
     let id = req.params.id;
     ActionsDb.get(id)
     .then(action => {
@@ -24,5 +24,75 @@ router.get('/:id', (req, res) => {
         res.status(500).json({ errorMessage: "Error retrieving action data from database." })
     });
 });
+
+router.post('/', validateAction, (req, res) => {
+    let actionBody = req.body;
+
+    ActionsDb.insert(actionBody)
+    .then(action => {
+        res.status(201).json(action);
+    })
+    .catch(err => {
+        console.log(err);
+        err.errno === 19
+        ? res.status(500).json({ errorMessage: "Invalid project ID."})
+        : res.status(500).json({ errorMessage: "Error posting action to database."});
+    });
+});
+
+router.delete('/:id', validateId, (req, res) => {
+    let id = req.params.id;
+    ActionsDb.remove(id)
+    .then(count => {
+        count < 1
+        ? res.status(404).json({ errorMessage: "Action ID not found." })
+        : res.status(200).json({ message: "Action deleted." });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ errorMessage: "Error removing action from database." });
+    });
+});
+
+router.put('/:id', validateId, (req, res) => {
+    let id = req.params.id;
+    let changes = req.body;
+    console.log(changes)
+
+    ActionsDb.update(id, changes)
+    .then(changedAction => {
+        res.status(200).json(changedAction);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ errorMessage: "Error editing action in database." });
+    });
+});
+
+// middleware
+
+function validateId(req, res, next) {
+let id = req.params.id;
+ActionsDb.get(id)
+.then(action => {
+    ! action 
+    ? res.status(404).json({ errorMessage: "ID not found." })
+    : next();
+})
+.catch(err => {
+    console.log(err);
+    res.status(500).json({ errorMessage: "Error checking ID in database." })
+})
+}
+
+function validateAction(req, res, next) {
+    let project_id = req.body.project_id;
+    let description = req.body.description;
+    let notes = req.body.notes;
+
+    !notes || !description || !project_id
+    ? res.status(400).json({ errorMessage: "Please supply a project ID, description, and notes." })
+    : next();
+}
 
 module.exports = router;
